@@ -1,0 +1,510 @@
+<html>
+  <head>
+    <style>
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Data</h1>
+          <p>Bringing public data from the web into our sketches</p>
+        </section>
+
+        <section>
+          <h3>Dexter Shepherd</h3>
+          <p>dextershepherd@calarts.edu</p>
+        </section>
+
+        <section>
+          <h3>Key concepts</h3>
+          <ul>
+            <li>Data formats</li>
+            <li>Loading static data from a file</li>
+            <li>Loading live data from public APIs</li>
+            <li>Parsing data</li>
+            <li>Visualization techniques</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Important data formats</h3>
+        </section>
+
+        <section>
+          <section>
+            <h3>CSV</h3>
+            <p>comma separated values</p>
+            <p>Think tables, spreadsheets, traditional databases</p>
+          </section>
+
+          <section>
+            <code> name, age, favorite color, Tim, 18, blue, Jenni, 25, red, Simon, 22, 0xFd23C7 </code>
+          </section>
+          
+          <section>
+            <h5>people.csv</h5>
+            <pre><code>
+            name,  age, favorite color,
+            Tim,   18,  blue,
+            Jenni, 25,  red,
+            Simon, 22,  0xFd23C7
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Pros of CSV</h3>
+            <ul>
+              <li>Easy to read when its formatted</li>
+              <li>Widely used in other computing applications</li>
+              <li>Reasonable lightweight</li>
+              <li>Makes it easy to compare many objects</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Cons of CSV</h3>
+            <ul>
+              <li>Not great for non uniform data</li>
+              <li>Inflexible</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>JSON</h3>
+            <p>Javascript Object Notation</p>
+            <p>Serializarion of javascript variables</p>
+          </section>
+
+          <section>
+            <h5>people.json</h5>
+            <pre><code>
+            [
+              {
+                'name': 'Tim',
+                'age': 18,
+                'favorite color': 'blue'
+              },
+              {
+                'name': 'Jenni',
+                'age': 25,
+                'favorite color': 'red'
+              },
+              {
+                'name': 'Simon',
+                'age': 22,
+                'favorite color': 0xFd23C7
+              }
+            ]
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Pros of JSON</h3>
+            
+            <ul>
+              <li>Easy to read</li>
+              <li>Direct representation of variables</li>
+              <li>Very flexible</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Cons of JSON</h3>
+
+            <ul>
+              <li>Annoying to hand write</li>
+              <li>Not always easy work with in languages other than Javascript</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Other useful formats</h3>
+          </section>
+
+          <section>
+            <h5>XML</h5>
+            <p>Extensible Markup Language</p>
+            <p>Looks like html ( lots of < and > )</p>
+            <p>Flexible like JSON but very verbose, often used in older systems</p>
+          </section>
+
+          <section>
+            <h5>Images and Textures</h5>
+            <p>Images are a great way to encode large amounts of simple data</p>
+          </section>
+        </section>
+
+        <section>
+          <h1>Working with static data sources</h1>
+        </section>
+        <section>
+          <section>
+            <h3>Working with CSV</h3>
+          </section>
+
+          <section>
+            <pre><code>
+            Table data; 
+
+            void setup() {
+              data = loadTable("people.csv", "header");
+              size(100, 100);
+
+              println(data.getInt(0, "name"));
+            }
+            </code></pre>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            <mark>Table data</mark>; 
+
+            void setup() {
+              data = loadTable("people.csv", "header");
+              size(100, 100);
+
+              println(data.getInt(0, "name"));
+            }
+            </code></pre>
+            <p>Table datatype stores csv data</p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            Table data; 
+
+            void setup() {
+              data = <mark>loadTable("people.csv", "header")</mark>;
+              size(100, 100);
+
+              println(data.getInt(0, "name"));
+            }
+            </code></pre>
+            <p>use the loadTable function to load csv data into the table</p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            Table data; 
+
+            void setup() {
+              data = loadTable("people.csv", "header");
+              size(100, 100);
+
+              println(<mark>data.getString(0, "name")</mark>);
+            }
+            </code></pre>
+            <p>Access data with the getName ( or getFloat/getInt ) function with a row index and a column name</p>
+          </section>
+
+          <section>
+            <h3>Demo</h3>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Working with JSON</h3>
+          </section>
+
+          <section>
+            <pre><code>
+            JSONArray data;
+
+            void setup() {
+              data = loadArray('people.json');
+              size(100, 100);
+
+              JSONObject person = data.getJSONObject(0);
+
+              println(person.getString('name'));
+            }
+            </code></pre>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            <mark>JSONArray data</mark>;
+
+            void setup() {
+              data = loadArray('people.json');
+              size(100, 100);
+
+              JSONObject person = data.getJSONObject(0);
+
+              println(person.getString('name'));
+            }
+            </code></pre>
+
+            <p>
+              JSON data will generally be structured as either an array,
+              or an object. Use the <code>JSONArray</code> and <code>JSONObject</code>
+              data types to store them.
+            </p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            JSONArray data;
+
+            void setup() {
+              data = <mark>loadJSONArray('people.json')</mark>;
+              size(100, 100);
+
+              JSONObject person = data.getJSONObject(0);
+
+              println(person.getString('name'));
+            }
+            </code></pre>
+
+            <p>
+              load the json file with the <code>loadJSONArray</code> function
+            </p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            JSONArray data;
+
+            void setup() {
+              data = loadJSONArray('people.json');
+              size(100, 100);
+
+              JSONObject person = <mark>data.getJSONObject(0)</mark>;
+
+              println(<mark>person.getString</mark>('name'));
+            }
+            </code></pre>
+
+            <p>
+              access data in the JSONObject with the getDataType functions
+            </p>
+          </section>
+
+          <section>
+            <h3>Demo</h3>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Images as data</h3>  
+          </section>
+
+          <section>
+            <p>Images are great ways to encode large amounts of simple data</p>
+            <ul>
+              <li>Very long lists of numbers</li>
+              <li>Multiple data sources encoded into RGBA channels</li>
+            </ul>
+          </section>
+
+          <section>
+            <pre><code>
+            PImage data; 
+
+            void setup() {
+              data = loadImage("data.jpg");
+              println(data.get(0, 0))
+              println(data.pixels[0])
+            }
+            </code></pre>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            <mark>PImage data</mark>; 
+
+            void setup() {
+              data = loadImage("data.jpg");
+              println(data.get(0, 0))
+              println(data.pixels[0])
+            }
+            </code></pre>
+            <p>images are stored in the PImage data type</p> 
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            PImage data; 
+
+            void setup() {
+              data = <mark>loadImage("data.jpg")</mark>;
+              println(data.get(0, 0))
+              println(data.pixels[0])
+            }
+            </code></pre>
+            <p>Load data with the loadImage function</p> 
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+            PImage data; 
+
+            void setup() {
+              data = loadImage("data.jpg");
+              println(<mark>data.get(0, 0)</mark>)
+              println(<mark>data.pixels[0]</mark>)
+            }
+            </code></pre>
+            <p>
+              Access data with the <code>get</code> function ( slow, but 2D ),
+              or the <code>pixels</code> array ( fast, but only 1D )
+            </p> 
+          </section>
+
+          <section>
+            <h1>Demo</h1>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Working with Dynamic data sources</h1>
+            <h3>APIs and the web</h3>
+          </section>
+
+          <section>
+            <h3>API</h3> 
+            <p>Application Programming Interface</p>
+            <p>A programmable interface to data on the web</p>
+          </section>
+
+
+          <section>
+            <p>
+              Large complex APIs can be pretty intimidating at first.
+              Luckily the really big ones ( facebook, twitter, instagram ... )
+              have 1000s of tutorials to help you along the way.
+            </p> 
+
+            <p>
+              For right now we can just focus on some simple ones.
+            </p>
+          </section>
+
+          <section>
+            <pre><code>
+              JSONArray data;
+
+              void setup() {
+                String[] rawData = loadStrings("http://api.flutrack.org/?s=feverORcough");
+                data = parseJSONArray(rawData[0]);
+
+                JSONObject tweet = data.getJSONObject(0);
+                println(tweet.getString("tweet_text"));
+              }
+            </code></pre>  
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+              <mark>JSONArray data</mark>;
+
+              void setup() {
+                String[] rawData = loadStrings("http://api.flutrack.org/?s=feverORcough");
+                data = parseJSONArray(rawData[0]);
+
+                JSONObject tweet = data.getJSONObject(0);
+                println(tweet.getString("tweet_text"));
+              }
+            </code></pre>  
+
+            <p>
+            APIs can return data in whatever format they like, this api returns data as JSON so we can store in a JSONArray object.
+            </p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+              JSONArray data;
+
+              void setup() {
+                String[] rawData = <mark>loadStrings("http://api.flutrack.org/?s=feverORcough")</mark>;
+                data = parseJSONArray(rawData[0]);
+
+                JSONObject tweet = data.getJSONObject(0);
+                println(tweet.getString("tweet_text"));
+              }
+            </code></pre>  
+
+            <p>
+            Load data from your API with the <code>loadStrings</code> function
+            </p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+              JSONArray data;
+
+              void setup() {
+                <mark>String[] rawData</mark> = loadStrings("http://api.flutrack.org/?s=feverORcough");
+                data = parseJSONArray(rawData[0]);
+
+                JSONObject tweet = data.getJSONObject(0);
+                println(tweet.getString("tweet_text"));
+              }
+            </code></pre>  
+
+            <p>
+            <code>loadStrings</code> returns an array of strings, as far as I can tell,
+            this array will always have length 1 for our use case.
+            </p>
+          </section>
+
+          <section>
+            <pre data-noescape><code>
+              JSONArray data;
+
+              void setup() {
+                String[] rawData = loadStrings("http://api.flutrack.org/?s=feverORcough");
+                data = <mark>parseJSONArray(rawData[0])</mark>;
+
+                JSONObject tweet = data.getJSONObject(0);
+                println(tweet.getString("tweet_text"));
+              }
+            </code></pre>  
+
+            <p>
+              Once our data is pulled down with <code>loadStrings</code> we can parse the JSON with 
+              <code>parseJSONArray</code> and use it like the json files in the previous examples.
+            </p>
+          </section>
+
+          <section>
+            <h1>Demo</h1>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h3>Resources</h3>
+            <p>Where to find data</p>
+          </section>
+
+          <section>
+            <ul>
+              <li><a href="https://github.com/dariusk/corpora" target="_blank">Corpora</a></li>
+              <li><a href="https://github.com/plotly/datasets" target="_blank">Plotly example data sets</a></li>
+              <li><a href="https://github.com/awesomedata/awesome-public-datasets" target="_blank">Awesome Public Datasets</a></li> 
+              <li><a href="https://github.com/toddmotto/public-apis" target="_blank">Public APIs list</a></li>
+            </ul>
+          </section>
+        </section>
+      </div>
+    </div>
+    <div id='canvas-container'></div>
+    <script src='./bundle.js'></script>
+  </body>
+</html>
